@@ -27,39 +27,25 @@ static int ft_strlen(const char *s)
 		return (0);
 	return (ft_strlen(++s) + 1);
 }
-/*
-static int endofline(char *s) //Recebe o buffer
-{ //RETORNA POSICAO DO \n
-	int pos;
-
-	pos = -1;
-	if (!(*s)) //String nula "\o" NAO TEM \n
-		return (pos);
-	pos = 0;
-	while (s[pos] != '\0') //Varre ate achar \n
+static void strfree(char **s) 
+{
+	if (s != NULL && *s != NULL)
 	{
-		if (s[pos] == '\n')
-			return (pos);
-		pos++;
+		free(*s);
+		*s = NULL;
 	}
-	if (pos == ft_strlen(s)) //Percorreu sem encontrar
-		return (-2);
-	else //Nem eh nula, nem tem, nem n tem - portanto !s
-		return (-1);
 }
-*/
+
 static void strcopy(char **dst, char **src, int start)
-{ //CONDICAO DST >= SRC!
+{ 
 	int i;
 	int j;
 
 	i = 0;
 	j = start;
-	while ((*src)[j]) //FAZER FUNCAO COPYSTR
+	while ((*src)[j]) 
 	{
 		(*dst)[i] = (*src)[j];
-		//(*dst)++;//Incremento direto, sem i, j, pois qdo sai do escopo, zera.***
-		//(*src)++;
 		i++;
 		j++;
 	}
@@ -73,20 +59,19 @@ static void zerabuffer(char **buffer, int start)
 	while ((*buffer)[i])
 	{
 		(*buffer)[i] = '\0';
-		//(*buffer)++;
 		i++;
 	}
 }
-static int ft_strappend(char **dst, char **add)// dst = s_main && add = buf
-{   //ja existe dst!!!
+static int ft_strappend(char **dst, char **add)
+{  
 	//add nao tem /n!!
 	size_t size;
-	size_t i;//COMO MANDO **S, uso vars q mantenham as strs.***(anotar!)
+	size_t i;
 	size_t j;
 	char *aux;
 	
 	size = ft_strlen(*dst) + ft_strlen(*add) + 1; 
-	if (!(aux = malloc(size * sizeof(char)))) //VAI RECEBER A LINHA ANT + BUFF
+	if (!(aux = malloc(size * sizeof(char)))) 
 		return (1);
     i = 0;
 	j = 0;
@@ -95,8 +80,7 @@ static int ft_strappend(char **dst, char **add)// dst = s_main && add = buf
 		aux[i] = (*dst)[i];
 		i++;
 	}
-	free(*dst); //LIBERA LINHA (dst = line)
-	*dst = NULL;
+	strfree(dst); //LIBERA LINHA (dst = line)
 	while ((*add)[j] != '\0')
 	{
 		aux[i] = (*add)[j];//COPIA ANEXO EM AUX
@@ -107,10 +91,12 @@ static int ft_strappend(char **dst, char **add)// dst = s_main && add = buf
 	zerabuffer(add, 0);//LIBERA BUFF
 	//ATE P EFEITO DE CONTROLE(se esta zerado eh pq foi cpy)
 	if (!(*dst = malloc(size*sizeof(char)))) //aloca com o tamanho novo
+	{
+		strfree(&aux);
 		return (1);
+	}
 	strcopy(dst, &aux, 0);	//COPIA em DTS, o SRC:
-	free(aux); //libera p n dar Mleak
-	aux = NULL;
+	strfree(&aux); //libera p n dar Mleak
 	return (0);
 }
 static int splitbuffer(char **buf, char **rest) //int = 0 nao tem resto
@@ -124,7 +110,7 @@ static int splitbuffer(char **buf, char **rest) //int = 0 nao tem resto
 	while ((*buf)[i] != '\n' && (*buf)[i] != '\0')
 		i++;
 	if ((*buf)[i] == '\0')
-		return (0); //NAO \n, e portanto: NAO TEM RESTO
+			return (0); 
 	//ENTAO EH \n!
 	else if ((*buf)[i + 1] != '\0') //AINDA TEM CARACTERE NO BUFFER
 	{
@@ -133,71 +119,41 @@ static int splitbuffer(char **buf, char **rest) //int = 0 nao tem resto
 		//ja elimina o \n!!! (comeca a partir de i)*********
 	}
 	else //So tinha \n e nada mais
-	{
 		zerabuffer(buf, i);//tira o \n fora
-	}
 	return (1);
-}
-static void strfree(char **s) //ENTENDER PQ EXISTE A CONDICAO s != NULL no if)
-{
-	if (s != NULL && *s != NULL) //(*s != NULL || s != NULL)
-	{
-		free(*s);
-		*s = NULL;
-	}
 }
 static int strinit(char **s, int size) //REDUNDANTE?
 {
-	//if (*s)
-	//	strfree(s); //JA ESTAVA INICIALIZADA
-	//if (!(*s)) //*s == NULL
-	//{
-		if (!(*s = malloc(size * sizeof(char)))) 
-			return (1); //erro Malloc. Retorna NULL pointer
-		(*s)[size - 1] = '\0';
-		zerabuffer(s, 0);
-		return (0);
-	//}
+	if (!(*s = malloc(size * sizeof(char)))) 
+		return (1); //erro Malloc. Retorna NULL pointer
+	(*s)[size - 1] = '\0';
+	zerabuffer(s, 0);
+	return (0);
 }
 int gnl(int fd, char **line)
 {
 	ssize_t ret;
 	static char *residual[5]; //AINDA N VOU MEXER C OPEN_MAX
-	//static int count;******************************************
 	char **buf;
-	//char **rest;
 	int oneline;
 	char buffer[BUFF_SIZE + 1]; //TESTE
-    //char buffer[24] = "oi\nmenina\ntudo\nbem?"; //TESTE
 	
-	/* inicializacoes 
-
-	if (count == 0)
-	{
-		buffer[0] = 'o';
-		buffer[1] = 'l';
-		buffer[2] = 'a';
-		buffer[3] = '\n';
-		buffer[4] = 't';
-		buffer[5] = '
-		*/
+	/* inicializacoes */
 	buffer[BUFF_SIZE] = '\0';
 	oneline = 0;
-	//if (!(*line)) //NAO EXISTE LINHA --------------NAO PRECISA TESTAR. TEORICAMENTE N EXISTE!
-		if (strinit(line, 1) < 0) //Malloc na qtidade necessaria
-			return (-1); //erro na MAlloc
+	if (strinit(line, 1) < 0) //Malloc na qtidade necessaria
+		return (-1); //erro na MAlloc
 	if (!residual[fd]) //NAO EXISTE RESIDUO PARA ESTE FD
 		if (strinit(&(residual[fd]), (BUFF_SIZE + 1)) < 0) //Malloc na qtidade necessaria
 			return (-1); //erro na MAlloc
 	if (!(buf = malloc(sizeof(char *))))
+	{
+		strfree(line);
+		strfree(&residual[fd]);
 		return (-1);
+	}
 	*buf = buffer;
 	zerabuffer(buf, 0);
-
-	//if (!(*buf = malloc(BUFF_SIZE*sizeof(char ))))
-	//	return (-1);
-
-
 	/* logica */
 	if (residual[fd])
 	{ //ja estava sendo trabalhado o residual[fd]
@@ -206,28 +162,68 @@ int gnl(int fd, char **line)
 			strcopy(buf, &(residual[fd]), 0);
 			zerabuffer(&(residual[fd]), 0);
 			oneline = splitbuffer(buf, &(residual[fd]));
-			if (ft_strappend(line, buf))
+			if (ft_strappend(line, buf)) //ERRO!
+			{
+				*buf = NULL; //strfree(buf); -> Nao posso fazer pois BUFFER N foi alocado p ser liberado
+				free(buf);
+				buf = NULL;
+				strfree(&(residual[fd]));
+				//strfree(line);
 				return (-1);
+			}
 			if (oneline)
+			{
+				*buf = NULL; //strfree(buf);
+				free(buf);
+				buf = NULL;
+				//strfree(line);
 				return (1);
+			}
 		}
 	}
 	//NAo tem residuo!
 	while ((ret = read(fd, *buf, BUFF_SIZE) > 0))
 	{
-		/* desenvolver */
 		oneline = splitbuffer(buf, &(residual[fd]));
 		if (ft_strappend(line, buf))
+		{
+			*buf = NULL; //strfree(buf);
+			free(buf);
+			buf = NULL;
+			strfree(&(residual[fd]));
+			//strfree(line);
 			return (-1);
+		}
 		if (oneline)
+		{
+			*buf = NULL; //strfree(buf);
+			free(buf);
+			buf = NULL;
+			//strfree(line);
 			return (1);
+		}
 	}
 	//ret = 0 -> EOF!
 	oneline = splitbuffer(buf, &(residual[fd]));
+	//if (*buf) //EXISTE LINHA!!!
+	//	oneline = 1;
 	if (ft_strappend(line, buf))
+	{
+		*buf = NULL; //strfree(buf);
+		free(buf);
+		buf = NULL;
+		strfree(&(residual[fd]));
+		//strfree(line);
 		return (-1);
+	}
 	//if (oneline)
 	//	return (1);
+	strfree(&(residual[fd]));
+	//free(*buf); //************************************
+	*buf = NULL;
+	free(buf);
+	buf = NULL;
+	//strfree(line);
 	return (0); //EOL ************************************ e se EOL e Uma linha? O que devolve?
 }
 int main()
@@ -235,7 +231,6 @@ int main()
 	char **linemain;
 	int fd;
 	int gnlret;
-	int count;
 
 	fd = open("42", O_RDONLY);
 	if (fd == -1)
@@ -244,26 +239,31 @@ int main()
 		return (1);
 	}
 	
-	//fd = 3; //TIRARRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR
 	if (!(linemain = (char **)malloc(1*sizeof(char*)))) //pointer to pointer
 			return (1);
-	while ((gnlret = gnl(fd, linemain)))
+	while ((gnlret = gnl(fd, linemain))) 
 	{
 		if (gnlret < 0)
 		{
 			printf("An error happened in get_next_line!");
+			free(linemain);
+			linemain = NULL;
+
 			return (1);
 		}
-		printf("Linha %d: %s\n", count, *linemain);
-		count++;
-		free(*linemain); //Alocou dentro da GNL
+		printf("%s\n", *linemain);
+		strfree(linemain);
 	}
-	//residualFDfree(fd); ??????????????? COMO LIBERA O RESIDUO?
+	printf("%s", *linemain);
+	strfree(linemain);
 	if (close(fd) == -1)
 	{
 		printf("File Close Error!\n");
-		//residualFDfree(fd);
+		free(linemain);
+		linemain = NULL;
 		return (1);
 	}
+	free(linemain);
+	linemain = NULL;
 	return (0);
 }
