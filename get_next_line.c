@@ -107,10 +107,11 @@ static int splitbuffer(char **buf, char **rest) //int = 0 nao tem resto
 
 	i = 0;
 	j = 0;
+	oneline = 0;
 	while ((*buf)[i] != '\n' && (*buf)[i] != '\0')
 		i++;
 	if ((*buf)[i] == '\0')
-			return (0); 
+			return (oneline); 
 	//ENTAO EH \n!
 	else if ((*buf)[i + 1] != '\0') //AINDA TEM CARACTERE NO BUFFER
 	{
@@ -120,7 +121,8 @@ static int splitbuffer(char **buf, char **rest) //int = 0 nao tem resto
 	}
 	else //So tinha \n e nada mais
 		zerabuffer(buf, i);//tira o \n fora
-	return (1);
+	oneline = 1;
+	return (oneline);
 }
 static int strinit(char **s, int size) //REDUNDANTE?
 {
@@ -136,15 +138,15 @@ int gnl(int fd, char **line)
 	static char *residual[5]; //AINDA N VOU MEXER C OPEN_MAX
 	char **buf;
 	int oneline;
-	char buffer[BUFF_SIZE + 1]; //TESTE
+	char buffer[BUFFER_SIZE + 1]; //TESTE
 	
 	/* inicializacoes */
-	buffer[BUFF_SIZE] = '\0';
+	buffer[BUFFER_SIZE] = '\0';
 	oneline = 0;
 	if (strinit(line, 1) < 0) //Malloc na qtidade necessaria
 		return (-1); //erro na MAlloc
 	if (!residual[fd]) //NAO EXISTE RESIDUO PARA ESTE FD
-		if (strinit(&(residual[fd]), (BUFF_SIZE + 1)) < 0) //Malloc na qtidade necessaria
+		if (strinit(&(residual[fd]), (BUFFER_SIZE + 1)) < 0) //Malloc na qtidade necessaria
 			return (-1); //erro na MAlloc
 	if (!(buf = malloc(sizeof(char *))))
 	{
@@ -182,7 +184,7 @@ int gnl(int fd, char **line)
 		}
 	}
 	//NAo tem residuo!
-	while ((ret = read(fd, *buf, BUFF_SIZE) > 0))
+	while ((ret = read(fd, *buf, BUFFER_SIZE) > 0))
 	{
 		oneline = splitbuffer(buf, &(residual[fd]));
 		if (ft_strappend(line, buf))
