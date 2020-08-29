@@ -6,13 +6,13 @@ The aim of this project is to code a function that returns a line ending with a 
 
 Here, a simple drawning about the main idea: copy buffer until find a '\n', keeping the residual for the next call.
 
-![gnl_idea](img/gnl_idea.png)
+![gnl_idea](imgs/gnl_idea.png)
 
 <h2><b>Logic</b></h2>
 
 Below, a get_next_line's flowchart:
 
-![gnl_flowchart](img/gnl_flowchart.png)
+![gnl_flowchart](imgs/gnl_flowchart.png)
 
 <h2><b>GNL Vars</b></h2>
 
