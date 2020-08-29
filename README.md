@@ -20,4 +20,10 @@ The get_next_line's variables.
 Note that the bonus part (The part that treats with various files at same time), uses an string''s array, like shows the figure below, called by residual[fd]. Where each position referes to particular FD. 
 On the simple get_next_line, the mandatory part, this is a simple string var.(residual).
 
+<b>Var list:</b>
+
+- <b>buff:</b> Read buffer (used on read function, to keep the read part)
+- <b>residual:</b> residue buffer (has the same size of buff, and keep the residue of buff, after the buff is append on the line)
+- <b>oneline:</b> Flag that indicates that function reach a line
+
 ![gnl_vars](imgs/gnl_vars.png)
