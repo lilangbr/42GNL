@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebresser <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static int strinit(char **s, int size) //REDUNDANTE?
 {
@@ -23,7 +23,7 @@ static int strinit(char **s, int size) //REDUNDANTE?
 int get_next_line(int fd, char **line)
 {
 	ssize_t ret;
-	static char *residual; //AINDA N VOU MEXER C OPEN_MAX
+	static char *residual[OPEN_MAX]; 
 	char **buf;
 	int oneline;
 	char buffer[BUFFER_SIZE + 1]; //TESTE
@@ -33,31 +33,31 @@ int get_next_line(int fd, char **line)
 	oneline = 0;
 	if (strinit(line, 1) < 0) //Malloc na qtidade necessaria
 		return (-1); //erro na MAlloc
-	if (!residual) //NAO EXISTE RESIDUO PARA ESTE FD
-		if (strinit(&(residual), (BUFFER_SIZE + 1)) < 0) //Malloc na qtidade necessaria
+	if (!residual[fd]) //NAO EXISTE RESIDUO PARA ESTE FD
+		if (strinit(&(residual[fd]), (BUFFER_SIZE + 1)) < 0) //Malloc na qtidade necessaria
 			return (-1); //erro na MAlloc
 	if (!(buf = malloc(sizeof(char *))))
 	{
 		strfree(line);
-		strfree(&residual);
+		strfree(&residual[fd]);
 		return (-1);
 	}
 	*buf = buffer;
 	zerabuffer(buf, 0);
 	/* logica */
-	if (residual)
+	if (residual[fd])
 	{ //ja estava sendo trabalhado o residual[fd]
-		while (*(residual)) //!= NULL, i.e, existe resto!
+		while (*(residual[fd])) //!= NULL, i.e, existe resto!
 		{
-			strcopy(buf, &(residual), 0);
-			zerabuffer(&(residual), 0);
-			oneline = splitbuffer(buf, &(residual));
+			strcopy(buf, &(residual[fd]), 0);
+			zerabuffer(&(residual[fd]), 0);
+			oneline = splitbuffer(buf, &(residual[fd]));
 			if (ft_strappend(line, buf)) //ERRO!
 			{
 				*buf = NULL; //strfree(buf); -> Nao posso fazer pois BUFFER N foi alocado p ser liberado
 				free(buf);
 				buf = NULL;
-				strfree(&(residual));
+				strfree(&(residual[fd]));
 				//strfree(line);
 				return (-1);
 			}
@@ -74,13 +74,13 @@ int get_next_line(int fd, char **line)
 	//NAo tem residuo!
 	while ((ret = read(fd, *buf, BUFFER_SIZE) > 0))
 	{
-		oneline = splitbuffer(buf, &(residual));
+		oneline = splitbuffer(buf, &(residual[fd]));
 		if (ft_strappend(line, buf))
 		{
 			*buf = NULL; //strfree(buf);
 			free(buf);
 			buf = NULL;
-			strfree(&(residual));
+			strfree(&(residual[fd]));
 			//strfree(line);
 			return (-1);
 		}
@@ -94,7 +94,7 @@ int get_next_line(int fd, char **line)
 		}
 	}
 	//ret = 0 -> EOF!
-	oneline = splitbuffer(buf, &(residual));
+	oneline = splitbuffer(buf, &(residual[fd]));
 	//if (*buf) //EXISTE LINHA!!!
 	//	oneline = 1;
 	if (ft_strappend(line, buf))
@@ -102,13 +102,13 @@ int get_next_line(int fd, char **line)
 		*buf = NULL; //strfree(buf);
 		free(buf);
 		buf = NULL;
-		strfree(&(residual));
+		strfree(&(residual[fd]));
 		//strfree(line);
 		return (-1);
 	}
 	//if (oneline)
 	//	return (1);
-	strfree(&(residual));
+	strfree(&(residual[fd]));
 	//free(*buf); //************************************
 	*buf = NULL;
 	free(buf);
