@@ -4,4 +4,12 @@ The aim of this project is to code a function that returns a line ending with a 
 
 <h2><b>Main Idea</b></h2>
 
-![GNL_logic](GNL_logic.png)
+![gnl_idea](img/gnl_idea.png)
+
+<h2><b>Logic</b></h2>
+
+![gnl_flowchart](img/gnl_flowchart.png)
+
+<h2><b>GNL Vars</b></h2>
+
+![gnl_vars](imgs/gnl_vars.png)
