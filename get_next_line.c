@@ -35,7 +35,7 @@ int get_next_line(int fd, char **line)
 	char buffer[BUFFER_SIZE + 1]; 
 	
 	
-	if (line == NULL || fd < 0 || fd > OPEN_MAX || BUFFER_SIZE == 0)
+	if (line == NULL || fd < 0 || fd >= OPEN_MAX || (read(fd, NULL, 0)) || BUFFER_SIZE == 0)
 		return (-1);
 	/* inicializacoes */
 	oneline = 0;
