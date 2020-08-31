@@ -19,6 +19,7 @@
 # include <stdio.h> //PRINTF
 # include <stdlib.h> //MALLOC
 # include <unistd.h> //CLOSE
+# include <limits.h> //OPEN_MAX
 
 int		ft_strlen(const char *s);
 void	strfree(char **s);

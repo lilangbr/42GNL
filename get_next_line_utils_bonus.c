@@ -48,10 +48,14 @@ void zerabuffer(char **buffer, int start)
 	int i;
 
 	i = start;
-	while ((*buffer)[i])
+	if ( buffer != NULL && *buffer != NULL)
 	{
-		(*buffer)[i] = '\0';
-		i++;
+		//while ((*buffer)[i]) 
+		while (i < ft_strlen(*buffer)) 
+		{
+			(*buffer)[i] = '\0';
+			i++;
+		}
 	}
 }
 int ft_strappend(char **dst, char **add)

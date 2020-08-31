@@ -48,7 +48,7 @@ void zerabuffer(char **buffer, int start)
 	int i;
 
 	i = start;
-	while ((*buffer)[i])
+	while ((*buffer)[i]) //ja estava inicializado, ok fazer este teste!
 	{
 		(*buffer)[i] = '\0';
 		i++;
