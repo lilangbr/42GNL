@@ -1,4 +1,4 @@
-<h1><b>Get_next_line42</b></h1>
+# Get_next_line42
 
 The aim of this project is to code a function that returns a line ending with a newline, read from a file descriptor.
 
