@@ -24,7 +24,7 @@
 int		ft_strlen(const char *s);
 void	strfree(char **s);
 void	strcopy(char **dst, char **src, int start);
-void	zerabuffer(char **buffer, int start);
+void	zerabuffer(char **buffer, int start, size_t size);
 int		ft_strappend(char **dst, char **add);
 int		splitbuffer(char **buf, char **rest);
 int		get_next_line(int fd, char **line);

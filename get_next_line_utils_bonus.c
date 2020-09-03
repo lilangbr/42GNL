@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 int ft_strlen(const char *s)
 {
@@ -43,22 +43,22 @@ void strcopy(char **dst, char **src, int start)
 	}
 	(*dst)[i] = '\0';
 }
-void zerabuffer(char **buffer, int start)
+void zerabuffer(char **buffer, int start, size_t size)
 {
-	int i;
+	size_t i;
 
 	i = start;
 	if ( buffer != NULL && *buffer != NULL)
 	{
 		//while ((*buffer)[i]) 
-		while (i < ft_strlen(*buffer)) 
+		while (i < size) //ft_strlen(*buffer)) 
 		{
 			(*buffer)[i] = '\0';
 			i++;
 		}
 	}
 }
-int ft_strappend(char **dst, char **add)
+int ft_strappend(char **dst, char **add) //ESTA FICANDO RESTOOOOOO
 {  
 	//add nao tem /n!!
 	size_t size;
@@ -69,6 +69,7 @@ int ft_strappend(char **dst, char **add)
 	size = ft_strlen(*dst) + ft_strlen(*add) + 1; 
 	if (!(aux = malloc(size * sizeof(char)))) 
 		return (1);
+	zerabuffer(&aux, 0, size);
     i = 0;
 	j = 0;
 	while ((*dst)[i]) //COPIA LINHA ANTERIOR EM AUX 
@@ -84,13 +85,14 @@ int ft_strappend(char **dst, char **add)
 		j++;
 	}
 	aux[i] = '\0'; 
-	zerabuffer(add, 0);//LIBERA BUFF
+	zerabuffer(add, 0, BUFFER_SIZE + 1);//LIBERA BUFF
 	//ATE P EFEITO DE CONTROLE(se esta zerado eh pq foi cpy)
 	if (!(*dst = malloc(size*sizeof(char)))) //aloca com o tamanho novo
 	{
 		strfree(&aux);
 		return (1);
 	}
+	zerabuffer(dst, 0, size); //-----02set--esta ficando resto!!!!!!!!! ***************!!!!
 	strcopy(dst, &aux, 0);	//COPIA em DTS, o SRC:
 	strfree(&aux); //libera p n dar Mleak
 	return (0);
@@ -112,11 +114,11 @@ int splitbuffer(char **buf, char **rest) //int = 0 nao tem resto
 	else if ((*buf)[i + 1] != '\0') //AINDA TEM CARACTERE NO BUFFER
 	{
 		strcopy(rest, buf, i + 1); //COPIA EM RESIDUAL apartir do \n
-		zerabuffer(buf, i); //vai zerar o inicio qdo copiar em *line!
+		zerabuffer(buf, i, BUFFER_SIZE + 1); //vai zerar o inicio qdo copiar em *line!
 		//ja elimina o \n!!! (comeca a partir de i)*********
 	}
 	else //So tinha \n e nada mais
-		zerabuffer(buf, i);//tira o \n fora
+		zerabuffer(buf, i, BUFFER_SIZE + 1);//tira o \n fora
 	oneline = 1;
 	return (oneline);
 }

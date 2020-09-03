@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "get_next_line.h"
 
 static int strinit(char **s, int size, int alloc)
 {
@@ -56,7 +56,7 @@ int get_next_line(int fd, char **line)
 	while (*(residual[fd])) //!= NULL, i.e, existe resto!
 	{
 		strcopy(buf, &(residual[fd]), 0);
-		zerabuffer(&(residual[fd]), 0);
+		zerabuffer(&(residual[fd]), 0, BUFFER_SIZE + 1);
 		oneline = splitbuffer(buf, &(residual[fd]));
 		if (ft_strappend(line, buf)) //ERRO!
 		{
@@ -95,7 +95,14 @@ int get_next_line(int fd, char **line)
 		}
 	}
 	if (ret == -1)
+	{
+		*buf = NULL; //strfree(buf);
+		free(buf);
+		buf = NULL;
+		strfree(&(residual[fd]));
+		strfree(line);
 		return (-1);
+	}
 	//ret = 0 -> EOF!
 	oneline = splitbuffer(buf, &(residual[fd]));
 	if (ft_strappend(line, buf))
