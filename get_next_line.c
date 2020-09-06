@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-static char	*ft_calloc(int size)
+static char	*f_calloc(int size)
 {
 	char	*s;
 	int		i;
@@ -34,21 +34,21 @@ static int	gnl_core(char *buff, char **rest, char **line, int fd)
 	**line = '\0';
 	while (**rest)
 	{
-		strcopy(&buff, rest, 0, 0);
-		if ((lineresult = creatline(&buff, rest, line)))
+		f_strcopy(&buff, rest, 0, 0);
+		if ((lineresult = f_creatline(&buff, rest, line)))
 			return (lineresult);
 	}
 	while ((ret = read(fd, buff, BUFFER_SIZE) > 0))
-		if ((lineresult = creatline(&buff, rest, line)))
+		if ((lineresult = f_creatline(&buff, rest, line)))
 			return (lineresult);
 	if (ret == -1)
 	{
-		strfree(line);
+		f_strfree(line);
 		return (-1);
 	}
-	if ((lineresult = creatline(&buff, rest, line)))
+	if ((lineresult = f_creatline(&buff, rest, line)))
 		return (lineresult);
-	strfree(rest);
+	f_strfree(rest);
 	return (0);
 }
 
@@ -60,14 +60,14 @@ int			get_next_line(int fd, char **line)
 
 	if (line == NULL || fd < 0 || fd >= OPEN_MAX
 			|| (read(fd, NULL, 0)) || BUFFER_SIZE < 1
-			|| !(buff = ft_calloc(BUFFER_SIZE + 1)))
+			|| !(buff = f_calloc(BUFFER_SIZE + 1)))
 		return (-1);
-	if (!residual && !(residual = ft_calloc(BUFFER_SIZE + 1)))
+	if (!residual && !(residual = f_calloc(BUFFER_SIZE + 1)))
 		return (-1);
 	gnl = gnl_core(buff, &residual, line, fd);
 	if (gnl == -1)
-		strfree(&residual);
-	strfree(&buff);
+		f_strfree(&residual);
+	f_strfree(&buff);
 	buff = NULL;
 	return (gnl);
 }

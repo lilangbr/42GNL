@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-int		ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	if (!s)
 		return (-1);
@@ -21,7 +21,7 @@ int		ft_strlen(const char *s)
 	return (ft_strlen(++s) + 1);
 }
 
-void	strfree(char **s)
+void	f_strfree(char **s)
 {
 	if (s != NULL && *s != NULL)
 	{
@@ -30,7 +30,7 @@ void	strfree(char **s)
 	}
 }
 
-void	strcopy(char **dst, char **src, int start_src, int start_dst)
+void	f_strcopy(char **dst, char **src, int start_src, int start_dst)
 {
 	int i;
 	int j;
@@ -47,7 +47,7 @@ void	strcopy(char **dst, char **src, int start_src, int start_dst)
 	(*dst)[i] = '\0';
 }
 
-int		ft_strappend(char **dst_line, char **add_buff)
+int		f_strjoin(char **dst_line, char **add_buff)
 {
 	size_t	size;
 	size_t	i;
@@ -57,20 +57,20 @@ int		ft_strappend(char **dst_line, char **add_buff)
 	if (!(aux = malloc(size * sizeof(char))))
 		return (1);
 	i = ft_strlen(*dst_line);
-	strcopy(&aux, dst_line, 0, 0);
-	strfree(dst_line);
-	strcopy(&aux, add_buff, 0, i);
+	f_strcopy(&aux, dst_line, 0, 0);
+	f_strfree(dst_line);
+	f_strcopy(&aux, add_buff, 0, i);
 	if (!(*dst_line = malloc(size * sizeof(char))))
 	{
-		strfree(&aux);
+		f_strfree(&aux);
 		return (1);
 	}
-	strcopy(dst_line, &aux, 0, 0);
-	strfree(&aux);
+	f_strcopy(dst_line, &aux, 0, 0);
+	f_strfree(&aux);
 	return (0);
 }
 
-int		creatline(char **buf, char **rest, char **line)
+int		f_creatline(char **buf, char **rest, char **line)
 {
 	int i;
 	int oneline;
@@ -83,7 +83,7 @@ int		creatline(char **buf, char **rest, char **line)
 	{
 		if ((*buf)[i + 1] != '\0')
 		{
-			strcopy(rest, buf, i + 1, 0);
+			f_strcopy(rest, buf, i + 1, 0);
 			while ((*buf)[i] != '\0')
 			{
 				(*buf)[i] = '\0';
@@ -94,7 +94,7 @@ int		creatline(char **buf, char **rest, char **line)
 			(*buf)[i] = '\0';
 		oneline = 1;
 	}
-	if (ft_strappend(line, buf))
+	if (f_strjoin(line, buf))
 		return (-1);
 	return (oneline);
 }

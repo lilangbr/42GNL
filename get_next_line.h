@@ -21,11 +21,11 @@
 # include <unistd.h>
 # include <limits.h>
 
-int		ft_strlen(const char *s);
-void	strfree(char **s);
-void	strcopy(char **dst, char **src, int start_src, int start_dst);
-int		ft_strappend(char **dst_line, char **add_buff);
-int		creatline(char **buf, char **rest, char **line);
+size_t	ft_strlen(const char *s);
+void	f_strfree(char **s);
+void	f_strcopy(char **dst, char **src, int start_src, int start_dst);
+int		f_strjoin(char **dst_line, char **add_buff);
+int		f_creatline(char **buf, char **rest, char **line);
 int		get_next_line(int fd, char **line);
 
 #endif
