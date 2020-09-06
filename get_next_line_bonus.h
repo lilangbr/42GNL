@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebresser <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -19,14 +19,13 @@
 # include <stdio.h> //PRINTF
 # include <stdlib.h> //MALLOC
 # include <unistd.h> //CLOSE
-# include <limits.h> //OPEN_MAX = 10240!
+# include <limits.h> //OPEN_MAX
 
 int		ft_strlen(const char *s);
 void	strfree(char **s);
 void	strcopy(char **dst, char **src, int start);
-void	zerabuffer(char **buffer, int start, size_t size);
-int		ft_strappend(char **dst, char **add);
-int		splitbuffer(char **buf, char **rest);
+int		ft_strappend(char **dst_line, char **add_buff);
+int		creatline(char **buf, char **rest, char **line);
 int		get_next_line(int fd, char **line);
 
 #endif

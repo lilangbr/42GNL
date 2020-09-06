@@ -24,9 +24,10 @@
 int		ft_strlen(const char *s);
 void	strfree(char **s);
 void	strcopy(char **dst, char **src, int start);
-void	zerabuffer(char **buffer, int start);
-int		ft_strappend(char **dst, char **add);
-int		splitbuffer(char **buf, char **rest);
+//void	zerabuffer(char **buffer, int start);
+int		ft_strappend(char **dst_line, char **add_buff);
+//int		splitbuffer(char **buf, char **rest);
+int		creatline(char **buf, char **rest, char **line);
 int		get_next_line(int fd, char **line);
 
 #endif

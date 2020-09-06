@@ -12,106 +12,58 @@
 
 #include "get_next_line.h"
 
-static int strinit(char **s, int size, int alloc) 
+static char    *ft_calloc(int size)
 {
-	int i;
-	if (alloc)
-		if (!(*s = malloc(size * sizeof(char)))) 
-			return (1); //erro Malloc. Retorna NULL pointer
+	char    *s;
+	int     i;
+	
 	i = 0;
+	s = malloc((size + 1) * sizeof(char));
 	while (i < size)
-	{
-		(*s)[i] = '\0';
-		i++;
-	}
-	return (0);
-} 
-int get_next_line(int fd, char **line)
+		s[i++] = '\0';
+	return (s);
+}
+static int gnl_core(char *buff, char **rest, char **line, int fd)
 {
 	ssize_t ret;
-	static char *residual; 
-	char **buf;
-	int oneline;
-	char buffer[BUFFER_SIZE + 1]; 
-	
-	
-	if (line == NULL || fd < 0 || fd >= OPEN_MAX || (read(fd, NULL, 0)) || BUFFER_SIZE == 0)
+	int lineresult;
+
+	if (!(*line = malloc(1*sizeof(char))))
 		return (-1);
-	/* inicializacoes */
-	oneline = 0;
-	if (strinit(line, 1, 1) < 0) //Malloc na qtidade necessaria
-		return (-1); //erro na MAlloc
-	if (!residual) //NAO EXISTE RESIDUO PARA ESTE FD
-		if (strinit(&(residual), (BUFFER_SIZE + 1), 1) < 0) //Malloc na qtidade necessaria
-			return (-1); //erro na MAlloc
-	if (!(buf = malloc(sizeof(char *))))
+	**line = '\0';	
+	while (**rest) //!= NULL, i.e, existe resto!
 	{
-		strfree(line);
-		strfree(&residual);
-		return (-1);
-	}
-	*buf = buffer;
-	strinit(buf, BUFFER_SIZE + 1, 0); 
-	/* logica */
-	while (*(residual)) //!= NULL, i.e, existe resto!
-	{
-		strcopy(buf, &(residual), 0);
-		zerabuffer(&(residual), 0);
-		oneline = splitbuffer(buf, &(residual));
-		if (ft_strappend(line, buf)) //ERRO!
-		{
-			*buf = NULL; //BUFFER N foi alocado p ser liberado
-			free(buf);
-			buf = NULL;
-			strfree(&(residual));
-			return (-1);
-		}
-			if (oneline)
-			{
-				*buf = NULL; //strfree(buf);
-				free(buf);
-				buf = NULL;
-				return (1);
-			}
-		}
-	//NAo tem residuo!
-	while ((ret = read(fd, *buf, BUFFER_SIZE) > 0))
-	{
-		oneline = splitbuffer(buf, &(residual));
-		if (ft_strappend(line, buf))
-		{
-			*buf = NULL;
-			free(buf);
-			buf = NULL;
-			strfree(&(residual));
-			return (-1);
-		}
-		if (oneline)
-		{
-			*buf = NULL;
-			free(buf);
-			buf = NULL;
-			return (1);
-		}
-	}
+		strcopy(&buff, rest, 0);
+		if ((lineresult = creatline(&buff, rest, line)))// splitbuffer(&buff, rest);
+			return(lineresult);
+	}//NAo tem residuo!
+	while ((ret = read(fd, buff, BUFFER_SIZE) > 0))
+		if ((lineresult = creatline(&buff, rest, line)))// splitbuffer(&buff, rest);
+			return(lineresult);
 	if (ret == -1)
 	{
 		strfree(line);
 		return (-1);
-	}
-	//ret = 0 -> EOF!
-	oneline = splitbuffer(buf, &(residual));
-	if (ft_strappend(line, buf))
-	{
-		*buf = NULL; 
-		free(buf);
-		buf = NULL;
-		strfree(&(residual));
-		return (-1);
-	}
-	strfree(&(residual));
-	*buf = NULL;
-	free(buf);
-	buf = NULL;
+	}//ret = 0 -> EOF!
+	if ((lineresult = creatline(&buff, rest, line)))// splitbuffer(&buff, rest);
+		return(lineresult);
+	strfree(rest);
 	return (0); //EOL ******** e se EOL e Uma linha? O que devolve?
+}
+int get_next_line(int fd, char **line)
+{
+	static char *residual; 
+	char *buff;
+	int gnl;
+	
+	if (line == NULL || fd < 0 || fd >= OPEN_MAX || (read(fd, NULL, 0)) || BUFFER_SIZE < 1 || !(buff = ft_calloc(BUFFER_SIZE + 1)))
+		return (-1);
+	if (!residual && !(residual = ft_calloc(BUFFER_SIZE + 1)))
+		return (-1);
+	gnl = gnl_core(buff, &residual, line, fd);
+	if (gnl == -1)
+		strfree(&residual);
+	strfree(&buff);
+	buff = NULL;
+	return (gnl);
 }
