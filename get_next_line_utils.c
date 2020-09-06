@@ -6,7 +6,7 @@
 /*   By: ebresser <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/07 20:46:03 by ebresser          #+#    #+#             */
-/*   Updated: 2020/09/06 15:32:58 by ebresser         ###   ########.fr       */
+/*   Updated: 2020/09/06 18:03:51 by ebresser         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,31 +51,15 @@ int		ft_strappend(char **dst_line, char **add_buff)
 {
 	size_t	size;
 	size_t	i;
-	//size_t	j;
 	char	*aux;
 
 	size = ft_strlen(*dst_line) + ft_strlen(*add_buff) + 1;
 	if (!(aux = malloc(size * sizeof(char))))
 		return (1);
-	//i = 0;
-	//j = 0;
 	i = ft_strlen(*dst_line);
 	strcopy(&aux, dst_line, 0, 0);
-	//while ((*dst_line)[i])
-	//{
-	//	aux[i] = (*dst_line)[i];
-	//	i++;
-	//}
 	strfree(dst_line);
 	strcopy(&aux, add_buff, 0, i);
-	//while ((*add_buff)[j] != '\0')
-	//{
-	//	aux[i] = (*add_buff)[j];
-	//	(*add_buff)[j] = '\0';
-	//	i++;
-	//	j++;
-	//}
-	//aux[i] = '\0';
 	if (!(*dst_line = malloc(size * sizeof(char))))
 	{
 		strfree(&aux);
