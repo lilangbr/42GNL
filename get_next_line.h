@@ -23,10 +23,8 @@
 
 int		ft_strlen(const char *s);
 void	strfree(char **s);
-void	strcopy(char **dst, char **src, int start);
-//void	zerabuffer(char **buffer, int start);
+void    strcopy(char **dst, char **src, int start_src, int start_dst);
 int		ft_strappend(char **dst_line, char **add_buff);
-//int		splitbuffer(char **buf, char **rest);
 int		creatline(char **buf, char **rest, char **line);
 int		get_next_line(int fd, char **line);
 

@@ -30,13 +30,13 @@ void	strfree(char **s)
 	}
 }
 
-void	strcopy(char **dst, char **src, int start)
+void	strcopy(char **dst, char **src, int start_src, int start_dst)
 {
 	int i;
 	int j;
 
-	i = 0;
-	j = start;
+	i = start_dst;
+	j = start_src;
 	while ((*src)[j])
 	{
 		(*dst)[i] = (*src)[j];
@@ -51,34 +51,37 @@ int		ft_strappend(char **dst_line, char **add_buff)
 {
 	size_t	size;
 	size_t	i;
-	size_t	j;
+	//size_t	j;
 	char	*aux;
 
 	size = ft_strlen(*dst_line) + ft_strlen(*add_buff) + 1;
 	if (!(aux = malloc(size * sizeof(char))))
 		return (1);
-	i = 0;
-	j = 0;
-	while ((*dst_line)[i])
-	{
-		aux[i] = (*dst_line)[i];
-		i++;
-	}
+	//i = 0;
+	//j = 0;
+	i = ft_strlen(*dst_line);
+	strcopy(&aux, dst_line, 0, 0);
+	//while ((*dst_line)[i])
+	//{
+	//	aux[i] = (*dst_line)[i];
+	//	i++;
+	//}
 	strfree(dst_line);
-	while ((*add_buff)[j] != '\0')
-	{
-		aux[i] = (*add_buff)[j];
-		(*add_buff)[j] = '\0';
-		i++;
-		j++;
-	}
-	aux[i] = '\0';
+	strcopy(&aux, add_buff, 0, i);
+	//while ((*add_buff)[j] != '\0')
+	//{
+	//	aux[i] = (*add_buff)[j];
+	//	(*add_buff)[j] = '\0';
+	//	i++;
+	//	j++;
+	//}
+	//aux[i] = '\0';
 	if (!(*dst_line = malloc(size * sizeof(char))))
 	{
 		strfree(&aux);
 		return (1);
 	}
-	strcopy(dst_line, &aux, 0);
+	strcopy(dst_line, &aux, 0, 0);
 	strfree(&aux);
 	return (0);
 }
@@ -96,7 +99,7 @@ int		creatline(char **buf, char **rest, char **line)
 	{
 		if ((*buf)[i + 1] != '\0')
 		{
-			strcopy(rest, buf, i + 1);
+			strcopy(rest, buf, i + 1, 0);
 			while ((*buf)[i] != '\0')
 			{
 				(*buf)[i] = '\0';

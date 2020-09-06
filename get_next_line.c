@@ -34,7 +34,7 @@ static int	gnl_core(char *buff, char **rest, char **line, int fd)
 	**line = '\0';
 	while (**rest)
 	{
-		strcopy(&buff, rest, 0);
+		strcopy(&buff, rest, 0, 0);
 		if ((lineresult = creatline(&buff, rest, line)))
 			return (lineresult);
 	}
