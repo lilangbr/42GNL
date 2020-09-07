@@ -9,7 +9,7 @@ Here, a simple drawning about the main idea: copy buffer until find a '\n', keep
 
 <h2><b>Logic</b></h2>
 
-Below, a get_next_line's flowchart:
+Below, a get_next_line's flowchart - Before final version:
 
 ![gnl_flowchart](imgs/gnl_flowchart.png)
 
@@ -26,3 +26,9 @@ On the simple get_next_line, the mandatory part, this is a simple string var.(re
 - <b>oneline:</b> Flag that indicates that function reach a line
 
 ![gnl_vars](imgs/gnl_vars.png)
+
+<h2><b>FINAL VERSION</b></h2>
+
+To according with moulinette, i had to split my function, because it had more than 70 lines. So, i've created a "gnl_core", that resumes the main logic of the code. Some functions, had your names changed to seem more useful to understanding.
+
+![gnl_new_flowchart](imgs/gnl_new_flowchart.png)
