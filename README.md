@@ -32,3 +32,4 @@ On the simple get_next_line, the mandatory part, this is a simple string var.(re
 To according with moulinette, i had to split my function, because it had more than 70 lines. So, i've created a "gnl_core", that resumes the main logic of the code. Some functions, had your names changed to seem more useful to understanding.
 
 ![gnl_new_flowchart](imgs/gnl_new_flowchart.png)
+![gnl_new_flowchart_labels](imgs/gnl_new_flowchart_labels.png)
