@@ -26,6 +26,8 @@ On the simple get_next_line, the mandatory part, this is a simple string var.(re
 - <b>residual:</b> residue buffer (has the same size of buff, and keep the residue of buff, after the buff is append on the line)
 - <b>oneline:</b> Flag that indicates that function reach a line
 
+(Note: As the buffer variable is only used within gnl_core, I chose to use a simple pointer, that is, I don't need its reference outside the scope of this function. So, the correct thing in this diagram is just buf and * buf. Like the diagram above, this was only used to understand the data structure.)
+
 ![gnl_vars](imgs/gnl_vars.png)
 
 <h2><b>FINAL VERSION</b></h2>
