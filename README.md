@@ -10,6 +10,7 @@ Here, a simple drawning about the main idea: copy buffer until find a '\n', keep
 <h2><b>Logic</b></h2>
 
 Below, a get_next_line's flowchart - Before final version:
+(Note: This diagram is not complete. After reading the file, there is no residue, that is, when EOF is reached, the buffer is still checked by repeating the buffer breaking process if there is '/ n'. This diagram served more for an initial understanding. The final version, below in this document, is more detailed and assertive.)
 
 ![gnl_flowchart](imgs/gnl_flowchart.png)
 
