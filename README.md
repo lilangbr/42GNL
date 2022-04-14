@@ -2,19 +2,19 @@
 The aim of this project is to code a function that returns a line ending with a newline, read from a file descriptor.<br/>
 ## Use:
 
-### Build project:<br/>
+🚧 project:<br/>
 ```
 42Libft $ make
 ```
-### Clean Obj files:<br/>
+:shower: Clean Obj files:<br/>
 ```
 42Libft $ make clean
 ```
-### Clean All (obj files + binary):<br/>
+:shower: :shower: Clean All (obj files + binary):<br/>
 ```
 42Libft $ make fclean
 ```
-### Clean All + build:<br/>
+:shower: :shower: 🚧 Clean All + build:<br/>
 ```
 42Libft $ make re
 ```
