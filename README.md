@@ -1,5 +1,10 @@
 # Get_next_line42
-The aim of this project is to code a function that returns a line ending with a newline, read from a file descriptor.<br/>
+
+🔧 C, Makefile </br>
+🌍 MacOs
+
+This is a reinterpretation of the fgets() function. Its purpose is to code a function that opens a file, reads a predetermined number (buffer) of characters, and returns the text in the standard output, read from a file descriptor, separated by line breaks. It works with concepts such as the use of data buffers, static variables, file descriptors, as well as double pointer with different use of arrays.
+
 ## Use:
 
 🚧 project:<br/>
